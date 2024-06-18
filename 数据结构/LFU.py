@@ -1,60 +1,57 @@
-from collections import OrderedDict, defaultdict
+from collections import defaultdict
 
 
-class LFUCache:
-    def __init__(self, cap):
-        self.cap = cap
-        self.size = 0
-        self.cache = {} # 主存储, key:(value,freq)
-        self.freq_map = defaultdict(OrderedDict) # 频率映射, freq-> OrderedDict(key->value)
+class LFU:
+    def __init__(self, capacity):
+        self.cache = dict()
+        self.freqMap = defaultdict(set)
+        self.capacity = capacity
         self.min_freq = 1
 
-    def _update_freq(self, key):
-        value, freq = self.cache[key]
-        # 从当前频率的 OrderedDict中删除key
-        del self.freq_map[freq][key]
-        if len(self.freq_map[freq]) == 0:
-            del self.freq_map[freq]
+    def update_freq(self, key):
+        val, freq = self.cache[key]
+        self.freqMap[freq].remove(key)
+        if len(self.freqMap[freq]) == 0:
             if self.min_freq == freq:
                 self.min_freq += 1
-        new_frq = freq + 1
-        self.freq_map[new_frq][key] = value
-        self.cache[key] = (value, new_frq)
+            del self.freqMap[freq]
+        self.freqMap[freq+1].add(key)
+        self.cache[key] = (val, freq+1)
+
+    def put(self, key, val):
+        if key in self.cache:
+            self.update_freq(key)
+            _, new_freq = self.cache[key]
+            self.cache[key] = val, new_freq
+        else:
+            if len(self.cache) == self.capacity:
+                key_todel = self.freqMap[self.min_freq].pop()
+                if len(self.freqMap[self.min_freq]) == 0:
+                    del self.freqMap[self.min_freq]
+                del self.cache[key_todel]
+
+            self.cache[key] = (val, 1)
+            self.freqMap[1].add(key)
+            self.min_freq = 1
 
     def get(self, key):
         if key not in self.cache:
-            return False, -1
-        self._update_freq(key)
+            return False, None
+        self.update_freq(key)
         return True, self.cache[key][0]
 
-    def put(self, key, value):
-        if key in self.cache:
-            freq = self.cache[key][1]
-            self.cache[key] = (value, freq)
-            self.freq_map[freq][key] = value
-            self._update_freq(key)
-        else: # 不在队列中
-            if self.size == self.cap: # 满了,先删除
-                key_todel, _ = self.freq_map[self.min_freq].popitem(last=False)
-                del self.cache[key_todel]
-                self.size -= 1
-            self.cache[key] = value, 1
-            self.freq_map[1][key] = value
-            self.min_freq = 1
-            self.size += 1
 
 if __name__ == "__main__":
-    #import pudb
-    #pudb.set_trace()
+    # import pudb
+    # pudb.set_trace()
     #
-    lfu = LFUCache(2)
+    lfu = LFU(2)
     lfu.put(1, 1)
+    lfu.get(1)  # 返回 1
     lfu.put(2, 2)
-    print(lfu.get(1)[1])  # 返回 1
-    lfu.put(3, 3)      # 该操作会使得 key 2 作废
-    print(lfu.get(2)[1])  # 返回 -1 (未找到)
-    print(lfu.get(3)[1])  # 返回 3
-    lfu.put(4, 4)      # 该操作会使得 key 1 作废
-    print(lfu.get(1)[1])  # 返回 -1 (未找到)
-    print(lfu.get(3)[1])  # 返回 3
-    print(lfu.get(4)[1])  # 返回 4
+    lfu.put(3, 3)
+    lfu.put(4, 4)
+    lfu.get(4)
+    lfu.get(4)
+    print(lfu.cache)
+    print(lfu.freqMap)

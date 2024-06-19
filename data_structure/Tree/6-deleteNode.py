@@ -52,7 +52,7 @@ def deleteNode(T, target):
             return T.left
         if T.right != None and T.left == None: 
             return T.right
-        minNode = geMin(T.right)
+        minNode = getMin(T.right)
         deleteNode(T, minNode.val)
         T.val = minNode.val
     elif target < T.val:
@@ -61,7 +61,7 @@ def deleteNode(T, target):
         T.right = deleteNode(T.right, target)
     return T
 
-def geMin(T):
+def getMin(T):
     while T.left != None:
         T = T.left
     return T

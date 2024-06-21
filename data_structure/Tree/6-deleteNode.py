@@ -46,11 +46,11 @@ def deleteNode(T, target):
     if T == None:
         return None
     if T.val == target:
-        if T.left == None and T.right == None: # 无子节点
+        if T.left == None and T.right == None:  # 无子节点
             return None
-        if T.left != None and T.right == None: # 一个子节点
+        if T.left != None and T.right == None:  # 一个子节点
             return T.left
-        if T.right != None and T.left == None: 
+        if T.right != None and T.left == None:
             return T.right
         minNode = getMin(T.right)
         deleteNode(T, minNode.val)
@@ -61,17 +61,20 @@ def deleteNode(T, target):
         T.right = deleteNode(T.right, target)
     return T
 
+
 def getMin(T):
     while T.left != None:
         T = T.left
     return T
-    
+
+
 def travel(T):
     if T == None:
         return
     travel(T.left)
     print(T.val)
     travel(T.right)
+
 
 travel(rootA)
 print("////////")

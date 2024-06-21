@@ -42,8 +42,6 @@ A[6].val = 68
 A[7].val = 67
 
 
-
-
 def insertIntoBST(T, target):
     if T == None:
         return TreeNode(target)
@@ -61,7 +59,9 @@ def insertIntoBST(T, target):
 #                 /
 #                67
 
+
 insertIntoBST(rootA, 47)
+
 
 def travel(T):
     if T == None:
@@ -70,5 +70,5 @@ def travel(T):
     print(T.val)
     travel(T.right)
 
-travel(rootA)
 
+travel(rootA)

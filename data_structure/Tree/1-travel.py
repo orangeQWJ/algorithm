@@ -25,8 +25,9 @@ A[6].left = A[7]
 #           /
 #          7
 
-
 # 遍历树
+
+
 def travel(T):
     print(T.val)
     if T.left != None:
@@ -35,6 +36,8 @@ def travel(T):
         travel(T.right)
 
 # 处理None的时机不同
+
+
 def travel2(T):
     if T == None:
         return
@@ -45,4 +48,3 @@ def travel2(T):
 
 travel(rootA)
 travel2(rootA)
-

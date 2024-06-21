@@ -104,5 +104,3 @@ def isValidBST2(T, min_val, max_val):
 
 
 print(isValidBST2(rootA, None, None))
-
-

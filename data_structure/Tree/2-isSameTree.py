@@ -71,14 +71,16 @@ def isSameTree(T1, T2):
 
     return leftSame and rightSame
 
+
 def isSameTree2(T1, T2):
     if T1 == None and T2 == None:
         return True
     if T1 == None or T2 == None:
         return False
-    if T1.val != T2.val :
+    if T1.val != T2.val:
         return False
     return isSameTree2(T1.left, T2.left) and isSameTree2(T1.right, T2.right)
+
 
 print(isSameTree(rootA, rootB))
 print(isSameTree2(rootA, rootB))

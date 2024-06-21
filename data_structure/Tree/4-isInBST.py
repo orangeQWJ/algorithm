@@ -60,6 +60,7 @@ def isInBST(T, target):
     elif target < T.val:
         return isInBST(T.left, target)
 
+
 print(isInTree(rootA, 69))
 print(isInTree(rootA, 67))
 print(isInBST(rootA, 69))
